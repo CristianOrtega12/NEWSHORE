@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Api.IADirectory.Configurations
+namespace Api.PruebaNewShore.Configurations
 {
     public static class AutoMapperConfig
     {

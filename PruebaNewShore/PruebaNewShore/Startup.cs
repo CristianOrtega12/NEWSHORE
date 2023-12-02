@@ -1,5 +1,5 @@
-using Api.IADirectory.Configurations;
-using Api.IADirectory.Filters;
+using Api.PruebaNewShore.Configurations;
+using Api.PruebaNewShore.Filters;
 using Application.Cqrs.User.Commands;
 using Application.Interfaces.Auths;
 using Application.Interfaces.User;
@@ -30,7 +30,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IADirectory
+namespace PruebaNewShore
 {
     public class Startup
     {
@@ -44,7 +44,7 @@ namespace IADirectory
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<IADirectoryApplicationDBContext>(options => {
+            services.AddDbContext<PruebaNewShoreDBContext>(options => {
                 options.UseSqlServer(Configuration.GetConnectionString("PruebaNewShore"));
             });
 

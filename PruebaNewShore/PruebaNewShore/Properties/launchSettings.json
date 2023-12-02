@@ -16,7 +16,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "IADirectory": {
+    "PruebaNewShore": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "weatherforecast",

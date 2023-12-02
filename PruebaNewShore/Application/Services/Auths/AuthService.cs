@@ -59,13 +59,20 @@ namespace Application.Services.Auths
                     .Where(x => x.Login.Trim() == auth.Login.Trim())
                     .ProjectTo<UserDto>(_autoMapper.ConfigurationProvider)
                     .FirstOrDefaultAsync();
-
-            var isValid = _passwordHasher.Check(userDto.Password, auth.Password);
-
-            if (!isValid)
+            if (userDto==null)
             {
                 throw new UnAuthorizeException("Usuario o contraseña incorrecta");
             }
+            else
+            {
+                var isValid = _passwordHasher.Check(userDto.Password, auth.Password);
+
+                if (!isValid)
+                {
+                    throw new UnAuthorizeException("Usuario o contraseña incorrecta");
+                }
+            }
+            
 
             return new AuthViewModel()
             {

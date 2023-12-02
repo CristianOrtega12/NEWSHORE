@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Infra.Data.Context
 {
-    public class IADirectoryApplicationDBContext : DbContext
+    public class PruebaNewShoreDBContext : DbContext
     {
-        public IADirectoryApplicationDBContext(DbContextOptions options) : base(options)
+        public PruebaNewShoreDBContext(DbContextOptions options) : base(options)
         {
                 
         }

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Api.IADirectory.Controllers
+namespace Api.PruebaNewShore.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
