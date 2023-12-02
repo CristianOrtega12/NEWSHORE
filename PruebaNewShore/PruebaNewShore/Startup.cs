@@ -45,7 +45,7 @@ namespace IADirectory
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<IADirectoryApplicationDBContext>(options => {
-                options.UseSqlServer(Configuration.GetConnectionString("IADirectoryConnection"));
+                options.UseSqlServer(Configuration.GetConnectionString("PruebaNewShore"));
             });
 
             services.AddControllers();
@@ -87,7 +87,7 @@ namespace IADirectory
             services.AddMediatR(typeof(PostUserCommand).GetTypeInfo().Assembly);
 
             services.AddSwaggerGen(c => {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "IADirectory", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "PruebaNewShore", Version = "v1" });
                 // Set the comments path for the Swagger JSON and UI.
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
@@ -126,7 +126,7 @@ namespace IADirectory
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "IADirectory");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "PruebaNewShore");
                 c.RoutePrefix = string.Empty;
             });
 

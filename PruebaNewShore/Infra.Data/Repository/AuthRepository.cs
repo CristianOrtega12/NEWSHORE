@@ -10,9 +10,9 @@ namespace Infra.Data.Repository
 {
     public class AuthRepository : IAuthRepository
     {
-        private IADirectoryApplicationDBContext _ctx;
+        private PruebaNewShoreDBContext _ctx;
 
-        public AuthRepository(IADirectoryApplicationDBContext ctx)
+        public AuthRepository(PruebaNewShoreDBContext ctx)
         {
             _ctx = ctx;
         }

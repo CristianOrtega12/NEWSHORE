@@ -12,9 +12,9 @@ namespace Infra.Data.Repository
 {
     public class BaseRepository<T> : IRepository<T> where T : Entity
     {
-        private readonly IADirectoryApplicationDBContext _ctx;
+        private readonly PruebaNewShoreDBContext _ctx;
         private DbSet<T> _entities;
-        public BaseRepository(IADirectoryApplicationDBContext ctx)
+        public BaseRepository(PruebaNewShoreDBContext ctx)
         {
             _ctx = ctx;
             _entities = ctx.Set<T>();

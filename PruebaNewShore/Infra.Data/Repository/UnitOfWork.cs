@@ -11,13 +11,13 @@ namespace Infra.Data.Repository
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly IADirectoryApplicationDBContext _ctx;
+        private readonly PruebaNewShoreDBContext _ctx;
         public IRepository<ArtificialIntelligence> ArtificialIntelligenceRepository => new BaseRepository<ArtificialIntelligence>(_ctx);
         public IRepository<CategoriesAI> CategoriesAIRepository => new BaseRepository<CategoriesAI>(_ctx);
         public IRepository<Role> RoleRepository => new BaseRepository<Role>(_ctx);
         public IRepository<User> UserRepository => new BaseRepository<User>(_ctx);
 
-        public UnitOfWork(IADirectoryApplicationDBContext ctx)
+        public UnitOfWork(PruebaNewShoreDBContext ctx)
         {
             _ctx = ctx;
 
