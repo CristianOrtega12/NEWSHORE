@@ -1,17 +1,13 @@
-﻿using Application.Common.Exceptions;
-using Application.Common.Response;
-using Application.Cqrs.User.Commands;
-using Application.DTOs.User;
+﻿using Application.Common.Response;
+using Application.Cqrs.Journey.Commands;
+using Application.DTOs.Journey;
 using Application.Interfaces.Journey;
-using Application.Interfaces.User;
 using AutoMapper;
 using Domain.Interfaces;
-using Infra.Data.Repository;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.Services.Journey
@@ -26,13 +22,13 @@ namespace Application.Services.Journey
             _autoMapper = autoMapper;
         }
 
-        public async Task<ApiResponse<List<UserDto>>> GetJourney()
+        public async Task<ApiResponse<List<JourneyDto>>> GetJourney(GetJourneyQuery request)
         {
-            var response = new ApiResponse<List<UserDto>>();
+            var response = new ApiResponse<List<JourneyDto>>();
 
             try
             {
-                response.Data = _autoMapper.Map<List<UserDto>>(await _unitOfWork.UserRepository.Get().ToListAsync());
+                response.Data = _autoMapper.Map<List<JourneyDto>>(await _unitOfWork.JourneyRepository.Get().Where(x=> x.Origin== request.JourneyDto.Origin && x.Destination == request.JourneyDto.Destination).ToListAsync());
                 response.Result = true;
                 response.Message = "OK";
             }
@@ -45,33 +41,30 @@ namespace Application.Services.Journey
             return response;
         }
 
-        public async Task<ApiResponse<UserDto>> AddUser(PostUserCommand request)
+        public async Task<ApiResponse<JourneyDto>> AddJourney(PostJourneyCommand request)
         {
-            var response = new ApiResponse<UserDto>();
+            var response = new ApiResponse<JourneyDto>();
 
             try
             {
-                var ExitsUser = await _unitOfWork.UserRepository.Get()
-                                                                .Where(x => x.Login == request.UserPostDto.Login)
+                var ExitsUser = await _unitOfWork.JourneyRepository.Get()
+                                                                .Where(x => x.Origin == request.JourneyDto.Origin && x.Destination == request.JourneyDto.Destination)
                                                                 .FirstOrDefaultAsync();
                 if (ExitsUser != null)
                 {
-                    throw new BadRequestException("El correo ya esta creado, por favor recupera la contraseña");
+                    return response;
                 }
+                Domain.Models.Journey journey = _autoMapper.Map<Domain.Models.Journey>(request.JourneyDto);
 
-                var User = _autoMapper.Map<Domain.Models.User>(request.UserPostDto);
-                User.Password = _passwordHasher.Hash(User.Password);
-
-                response.Data = _autoMapper.Map<UserDto>(await _unitOfWork.UserRepository.Add(User));
+                response.Data = _autoMapper.Map<JourneyDto>(await _unitOfWork.JourneyRepository.Add(journey));
                 response.Result = true;
                 response.Message = "OK";
             }
             catch (Exception ex)
             {
                 response.Result = false;
-                response.Message = $"Error al Crear Usuario. { ex.Message } ";
+                response.Message = $"Error al Crear Journey. { ex.Message } ";
             }
-
             return response;
         }
     }

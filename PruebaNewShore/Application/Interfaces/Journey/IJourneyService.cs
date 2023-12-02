@@ -1,4 +1,5 @@
 ﻿using Application.Common.Response;
+using Application.Cqrs.Journey.Commands;
 using Application.Cqrs.User.Commands;
 using Application.DTOs.Journey;
 using Application.DTOs.User;
@@ -9,7 +10,7 @@ namespace Application.Interfaces.Journey
 {
     public interface IJourneyService
     {
-        Task<ApiResponse<JourneyDto>> AddJourney(PostUserCommand request);
-        Task<ApiResponse<List<JourneyDto>>> GetJourney();
+        Task<ApiResponse<JourneyDto>> AddJourney(PostJourneyCommand request);
+        Task<ApiResponse<List<JourneyDto>>> GetJourney(GetJourneyQuery request);
     }
 }
