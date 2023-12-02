@@ -12,8 +12,9 @@ namespace Infra.Data.Repository
     public class UnitOfWork : IUnitOfWork
     {
         private readonly PruebaNewShoreDBContext _ctx;
-        public IRepository<ArtificialIntelligence> ArtificialIntelligenceRepository => new BaseRepository<ArtificialIntelligence>(_ctx);
-        public IRepository<CategoriesAI> CategoriesAIRepository => new BaseRepository<CategoriesAI>(_ctx);
+        public IRepository<Journey> JourneyRepository => new BaseRepository<Journey>(_ctx);
+        public IRepository<Fligth> FligthRepository => new BaseRepository<Fligth>(_ctx);
+        public IRepository<Transport> TransportRepository => new BaseRepository<Transport>(_ctx);
         public IRepository<Role> RoleRepository => new BaseRepository<Role>(_ctx);
         public IRepository<User> UserRepository => new BaseRepository<User>(_ctx);
 

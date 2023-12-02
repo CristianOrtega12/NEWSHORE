@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Cqrs\Journey\Queries\" />
     <Folder Include="Cqrs\User\Queries\" />
   </ItemGroup>
 

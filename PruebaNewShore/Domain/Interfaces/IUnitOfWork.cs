@@ -8,8 +8,9 @@ namespace Domain.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-        IRepository<ArtificialIntelligence> ArtificialIntelligenceRepository { get; }
-        IRepository<CategoriesAI> CategoriesAIRepository { get; }
+        IRepository<Journey> JourneyRepository { get; }
+        IRepository<Fligth> FligthRepository { get; }
+        IRepository<Transport> TransportRepository { get; }
         IRepository<Role> RoleRepository { get; }
         IRepository<User> UserRepository { get; }
 
