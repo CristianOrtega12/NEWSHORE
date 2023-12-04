@@ -35,34 +35,38 @@ namespace Application.Services.Journey
             var response = new ApiResponse<List<JourneyDto>>();
             try
             {
-                //var ExitJourney = await _unitOfWork.JourneyRepository.Get()
-                //                                             .Where(x => x.Origin.Equals(request.Origin) && x.Destination.Equals(request.Destination))
-                //                                               .ToListAsync();
-                //if (ExitJourney!=null && ExitJourney.Count>0)
-                //{
-
-                //    foreach (var itemJourney in ExitJourney)
-                //    {
-                //        var ExitJourneyFlight = await _unitOfWork.JourneyFlightRepository.Get()
-                //                                             .Where(x=> x.JourneyId == itemJourney.Id)
-                //                                               .ToListAsync();
-                //        foreach (var itemFlight in ExitJourneyFlight)
-                //        {
-                //            var Flight = await _unitOfWork.FlightRepository.Get()
-                //                                             .Where(x => x.Id == itemFlight.FlightId)
-                //                                               .ToListAsync();
-                //            foreach (var item in Flight)
-                //            {
-                //                var Trasport = await _unitOfWork.TransportRepository.Get()
-                //                                             .Where(x => x.Id == item.TransportId)
-                //                                               .ToListAsync();
-                //            }
-                //        }
-                //    }
-                //}
-                if (false)
+                var ExitJourney = await _unitOfWork.JourneyRepository.Get()
+                                                             .Where(x => x.Origin.Equals(request.Origin) && x.Destination.Equals(request.Destination))
+                                                               .ToListAsync();
+                if (ExitJourney != null && ExitJourney.Count > 0)
                 {
+                    List<JourneyDto> jresponses = new List<JourneyDto>();
+                    foreach (var itemJourney in ExitJourney)
+                    {
+                        JourneyDto journeyDB= new JourneyDto {Origin=itemJourney.Origin,Destination=itemJourney.Destination,Price=itemJourney.Price };
+                        var ExitJourneyFlight = await _unitOfWork.JourneyFlightRepository.Get()
+                                                             .Where(x => x.JourneyId == itemJourney.Id)
+                                                               .ToListAsync();
+                        journeyDB.Flights = new List<FlightDto>();
+                        foreach (var itemFlight in ExitJourneyFlight)
+                        {
+                            
+                            var Flight = await _unitOfWork.FlightRepository.Get()
+                                                             .Where(x => x.Id == itemFlight.FlightId)
+                                                               .ToListAsync();
+                            foreach (var item in Flight)
+                            {
+                                var transport = _autoMapper.Map <TransportDto> (await _unitOfWork.TransportRepository.Get()
+                                                             .Where(x => x.Id == item.TransportId)
+                                                               .FirstOrDefaultAsync());
+                                FlightDto flightDB = new FlightDto {Transport= transport,Origin=item.Origin,Destination=item.Destination,Price=item.Price };
+                                journeyDB.Flights.Add(flightDB);
 
+                            }
+                        }
+                        jresponses.Add(journeyDB);
+                    }
+                    response.Data = jresponses;
                 }
                 else
                 {
