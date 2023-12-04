@@ -60,7 +60,7 @@ namespace Application.Services.Journey
                 //        }
                 //    }
                 //}
-                if (true)
+                if (false)
                 {
 
                 }
