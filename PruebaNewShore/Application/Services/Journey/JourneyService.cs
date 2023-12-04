@@ -35,32 +35,69 @@ namespace Application.Services.Journey
             var response = new ApiResponse<List<JourneyDto>>();
             try
             {
-                var client = new HttpClient();
-                var responseApi = await client.GetAsync("https://recruiting-api.newshore.es/api/flights/1");
-                var content = await responseApi.Content.ReadAsStringAsync();
-                var responseApiSerial = JsonConvert.DeserializeObject<List<FlightApiDto>>(content);
-                //JourneyDto jresponse = new JourneyDto();
-                List<FlightDto> jflight= new List<FlightDto>();
-                foreach (var item in responseApiSerial)
+                //var ExitJourney = await _unitOfWork.JourneyRepository.Get()
+                //                                             .Where(x => x.Origin.Equals(request.Origin) && x.Destination.Equals(request.Destination))
+                //                                               .ToListAsync();
+                //if (ExitJourney!=null && ExitJourney.Count>0)
+                //{
+
+                //    foreach (var itemJourney in ExitJourney)
+                //    {
+                //        var ExitJourneyFlight = await _unitOfWork.JourneyFlightRepository.Get()
+                //                                             .Where(x=> x.JourneyId == itemJourney.Id)
+                //                                               .ToListAsync();
+                //        foreach (var itemFlight in ExitJourneyFlight)
+                //        {
+                //            var Flight = await _unitOfWork.FlightRepository.Get()
+                //                                             .Where(x => x.Id == itemFlight.FlightId)
+                //                                               .ToListAsync();
+                //            foreach (var item in Flight)
+                //            {
+                //                var Trasport = await _unitOfWork.TransportRepository.Get()
+                //                                             .Where(x => x.Id == item.TransportId)
+                //                                               .ToListAsync();
+                //            }
+                //        }
+                //    }
+                //}
+                if (true)
                 {
-                    jflight.Add(new FlightDto { Transport = new TransportDto { FligthCarrier = item.FlightCarrier, FligthCarrierNumber = item.FlightNumber }, Origin = item.DepartureStation, Destination = item.ArrivalStation, Price = item.Price });
 
                 }
-                //jresponse.Flights = new List<FlightDto>();
-                //jresponse.Flights.AddRange(jflight);
-                //jresponse.Origin= request.Origin;
-                //jresponse.Destination= request.Destination;
-                List<JourneyDto> jresponses = new List<JourneyDto>();
-                jresponses= FindAllPaths(jflight, request.Origin, request.Destination);
-                //jresponses.Add(jresponse);
-                //response.Data = _autoMapper.Map<List<JourneyDto>>(await _unitOfWork.JourneyRepository.Get().Where(x=> x.Origin== request.Origin && x.Destination == request.Destination).ToListAsync());
-                List<Domain.Models.Journey> jsave = new List<Domain.Models.Journey>();
-                foreach (var item in jresponses)
+                else
                 {
-                    jsave.Add(_autoMapper.Map<Domain.Models.Journey>(item));
+                    var client = new HttpClient();
+                    var responseApi = await client.GetAsync("https://recruiting-api.newshore.es/api/flights/1");
+                    var content = await responseApi.Content.ReadAsStringAsync();
+                    var responseApiSerial = JsonConvert.DeserializeObject<List<FlightApiDto>>(content);
+                    //JourneyDto jresponse = new JourneyDto();
+                    List<FlightDto> jflight = new List<FlightDto>();
+                    foreach (var item in responseApiSerial)
+                    {
+                        jflight.Add(new FlightDto { Transport = new TransportDto { FligthCarrier = item.FlightCarrier, FligthCarrierNumber = item.FlightNumber }, Origin = item.DepartureStation, Destination = item.ArrivalStation, Price = item.Price });
+
+                    }
+                    List<JourneyDto> jresponses = new List<JourneyDto>();
+                    jresponses = FindAllPaths(jflight, request.Origin, request.Destination);
+
+                    foreach (var item in jresponses)
+                    {
+                        Domain.Models.Journey journeySave = new Domain.Models.Journey {Origin=item.Origin,Destination=item.Destination,Price=item.Price };
+                        var idjourney= await _unitOfWork.JourneyRepository.Add(journeySave);
+                        foreach (var itemFlight in item.Flights)
+                        {
+                            Fligth flightSave = new Fligth {Origin=itemFlight.Origin,Destination=itemFlight.Destination,Price=itemFlight.Price };
+                            Transport trasportSave = new Transport {FligthCarrier=itemFlight.Transport.FligthCarrier,FligthCarrierNumber=itemFlight.Transport.FligthCarrierNumber };
+                            var idtrasportSave = await _unitOfWork.TransportRepository.Add(trasportSave);
+                            flightSave.TransportId = idtrasportSave.Id;
+                            JourneyFlight journeyFlihgtSave = new JourneyFlight {JourneyId=idjourney.Id};
+                            var idFlight= await _unitOfWork.FlightRepository.Add(flightSave);
+                            journeyFlihgtSave.FlightId = idFlight.Id;
+                            await _unitOfWork.JourneyFlightRepository.Add(journeyFlihgtSave);
+                        }
+                    }
+                    response.Data = jresponses;
                 }
-                _autoMapper.Map<JourneyDto>(await _unitOfWork.JourneyRepository.AddRange(jsave));
-                response.Data = jresponses;
                 response.Result = true;
                 response.Message = "OK";
             }

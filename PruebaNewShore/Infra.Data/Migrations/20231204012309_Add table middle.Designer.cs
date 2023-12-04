@@ -3,14 +3,16 @@ using Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infra.Data.Migrations
 {
     [DbContext(typeof(PruebaNewShoreDBContext))]
-    partial class PruebaNewShoreDBContextModelSnapshot : ModelSnapshot
+    [Migration("20231204012309_Add table middle")]
+    partial class Addtablemiddle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,7 +74,7 @@ namespace Infra.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("FlightId")
+                    b.Property<int>("FlightsId")
                         .HasColumnType("int");
 
                     b.Property<int>("JourneyId")
@@ -80,7 +82,7 @@ namespace Infra.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FlightId");
+                    b.HasIndex("FlightsId");
 
                     b.HasIndex("JourneyId");
 
@@ -168,7 +170,7 @@ namespace Infra.Data.Migrations
                 {
                     b.HasOne("Domain.Models.Fligth", "Fligth")
                         .WithMany()
-                        .HasForeignKey("FlightId")
+                        .HasForeignKey("FlightsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

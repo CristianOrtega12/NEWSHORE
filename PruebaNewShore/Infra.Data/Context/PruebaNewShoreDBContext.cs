@@ -18,6 +18,7 @@ namespace Infra.Data.Context
         public DbSet<Role> Roles { get; set; }
         public DbSet<Fligth> Fligth { get; set; }
         public DbSet<Journey> Journey { get; set; }
+        public DbSet<JourneyFlight> JourneyFlight { get; set; }
         public DbSet<Transport> Transport { get; set; }
         public DbSet<User> Users { get; set; }
 
