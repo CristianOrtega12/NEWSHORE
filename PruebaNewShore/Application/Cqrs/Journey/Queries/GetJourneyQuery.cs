@@ -10,11 +10,13 @@ using System.Threading.Tasks;
 
 namespace Application.Cqrs.Journey.Commands
 {
-    public class GetJourneyQuery : IRequest<ApiResponse<JourneyDto>>
+    public class GetJourneyQuery : IRequest<ApiResponse<List<JourneyDto>>>
     {
-        public JourneyDto JourneyDto { get; set; }
+        public string Origin { get; set; }
+        public string Destination { get; set; }
+
     }
-    public class GetJourneyQueryHandler : IRequestHandler<GetJourneyQuery, ApiResponse<JourneyDto>>
+    public class GetJourneyQueryHandler : IRequestHandler<GetJourneyQuery, ApiResponse<List<JourneyDto>>>
     {
         private readonly IJourneyService _journeyService;
         public GetJourneyQueryHandler(IJourneyService JourneyService)
@@ -22,7 +24,7 @@ namespace Application.Cqrs.Journey.Commands
             _journeyService = JourneyService;
         }
 
-        public async Task<ApiResponse<JourneyDto>> Handle(GetJourneyQuery request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<List<JourneyDto>>> Handle(GetJourneyQuery request, CancellationToken cancellationToken)
         {
             return await _journeyService.GetJourney(request);
         }

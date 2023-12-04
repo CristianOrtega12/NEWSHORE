@@ -2,9 +2,11 @@ using Api.PruebaNewShore.Configurations;
 using Api.PruebaNewShore.Filters;
 using Application.Cqrs.User.Commands;
 using Application.Interfaces.Auths;
+using Application.Interfaces.Journey;
 using Application.Interfaces.User;
 using Application.Options;
 using Application.Services.Auths;
+using Application.Services.Journey;
 using Application.Services.User;
 using Domain.Interfaces;
 using Infra.Data.Context;
@@ -58,6 +60,7 @@ namespace PruebaNewShore
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IPasswordHasher, PasswordHasher>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IJourneyService, JourneytService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddCors();
 
@@ -132,7 +135,6 @@ namespace PruebaNewShore
 
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

@@ -11,7 +11,14 @@
             <param name="command"></param>
             <returns></returns>
         </member>
-        <member name="M:Api.PruebaNewShore.Controllers.JourneyController.PostUser(Application.Cqrs.User.Commands.PostUserCommand)">
+        <member name="M:Api.PruebaNewShore.Controllers.JourneyController.PostJourney(Application.Cqrs.Journey.Commands.PostJourneyCommand)">
+            <summary>
+            Agrega un nuevo Journey en la base de datos
+            </summary>
+            <param name="command"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.PruebaNewShore.Controllers.JourneyController.GetJourney(Application.Cqrs.Journey.Commands.GetJourneyQuery)">
             <summary>
             Agrega un nuevo Journey en la base de datos
             </summary>
