@@ -72,13 +72,6 @@ namespace Application.Services.Journey
 
             return response;
         }
-
-
-
-
-
-
-
         // Función para encontrar todas las rutas desde un origen a un destino
         public static List<JourneyDto> FindAllPaths(List<FlightDto> routes, string start, string target)
         {
