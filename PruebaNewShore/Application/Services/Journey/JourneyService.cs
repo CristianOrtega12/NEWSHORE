@@ -35,73 +35,10 @@ namespace Application.Services.Journey
             var response = new ApiResponse<List<JourneyDto>>();
             try
             {
-                var ExitJourney = await _unitOfWork.JourneyRepository.Get()
-                                                             .Where(x => x.Origin.Equals(request.Origin) && x.Destination.Equals(request.Destination))
-                                                               .ToListAsync();
-                if (ExitJourney != null && ExitJourney.Count > 0)
-                {
-                    List<JourneyDto> jresponses = new List<JourneyDto>();
-                    foreach (var itemJourney in ExitJourney)
-                    {
-                        JourneyDto journeyDB= new JourneyDto {Origin=itemJourney.Origin,Destination=itemJourney.Destination,Price=itemJourney.Price };
-                        var ExitJourneyFlight = await _unitOfWork.JourneyFlightRepository.Get()
-                                                             .Where(x => x.JourneyId == itemJourney.Id)
-                                                               .ToListAsync();
-                        journeyDB.Flights = new List<FlightDto>();
-                        foreach (var itemFlight in ExitJourneyFlight)
-                        {
-                            
-                            var Flight = await _unitOfWork.FlightRepository.Get()
-                                                             .Where(x => x.Id == itemFlight.FlightId)
-                                                               .ToListAsync();
-                            foreach (var item in Flight)
-                            {
-                                var transport = _autoMapper.Map <TransportDto> (await _unitOfWork.TransportRepository.Get()
-                                                             .Where(x => x.Id == item.TransportId)
-                                                               .FirstOrDefaultAsync());
-                                FlightDto flightDB = new FlightDto {Transport= transport,Origin=item.Origin,Destination=item.Destination,Price=item.Price };
-                                journeyDB.Flights.Add(flightDB);
-
-                            }
-                        }
-                        jresponses.Add(journeyDB);
-                    }
-                    response.Data = jresponses;
-                }
-                else
-                {
-                    var client = new HttpClient();
-                    var responseApi = await client.GetAsync("https://recruiting-api.newshore.es/api/flights/1");
-                    var content = await responseApi.Content.ReadAsStringAsync();
-                    var responseApiSerial = JsonConvert.DeserializeObject<List<FlightApiDto>>(content);
-                    //JourneyDto jresponse = new JourneyDto();
-                    List<FlightDto> jflight = new List<FlightDto>();
-                    foreach (var item in responseApiSerial)
-                    {
-                        jflight.Add(new FlightDto { Transport = new TransportDto { FligthCarrier = item.FlightCarrier, FligthCarrierNumber = item.FlightNumber }, Origin = item.DepartureStation, Destination = item.ArrivalStation, Price = item.Price });
-
-                    }
-                    List<JourneyDto> jresponses = new List<JourneyDto>();
-                    jresponses = FindAllPaths(jflight, request.Origin, request.Destination);
-
-                    foreach (var item in jresponses)
-                    {
-                        Domain.Models.Journey journeySave = new Domain.Models.Journey {Origin=item.Origin,Destination=item.Destination,Price=item.Price };
-                        var idjourney= await _unitOfWork.JourneyRepository.Add(journeySave);
-                        foreach (var itemFlight in item.Flights)
-                        {
-                            Fligth flightSave = new Fligth {Origin=itemFlight.Origin,Destination=itemFlight.Destination,Price=itemFlight.Price };
-                            Transport trasportSave = new Transport {FligthCarrier=itemFlight.Transport.FligthCarrier,FligthCarrierNumber=itemFlight.Transport.FligthCarrierNumber };
-                            var idtrasportSave = await _unitOfWork.TransportRepository.Add(trasportSave);
-                            flightSave.TransportId = idtrasportSave.Id;
-                            JourneyFlight journeyFlihgtSave = new JourneyFlight {JourneyId=idjourney.Id};
-                            var idFlight= await _unitOfWork.FlightRepository.Add(flightSave);
-                            journeyFlihgtSave.FlightId = idFlight.Id;
-                            await _unitOfWork.JourneyFlightRepository.Add(journeyFlihgtSave);
-                        }
-                    }
-                    response.Data = jresponses;
-                }
+                var jresponses = await _unitOfWork.JourneyRepository.Get()
+                                                 .Where(x => x.Origin.Equals(request.Origin) && x.Destination.Equals(request.Destination))
+                                                   .ToListAsync();
+                response.Data = jresponses;
                 response.Result = true;
                 response.Message = "OK";
             }
@@ -110,8 +47,85 @@ namespace Application.Services.Journey
                 response.Result = false;
                 response.Message = $"Error al consultar el registro, consulte con el administrador. { ex.Message } ";
             }
+//try
+//{
+//    var ExitJourney = await _unitOfWork.JourneyRepository.Get()
+//                                                 .Where(x => x.Origin.Equals(request.Origin) && x.Destination.Equals(request.Destination))
+//                                                   .ToListAsync();
+//    if (ExitJourney != null && ExitJourney.Count > 0)
+//    {
+//        List<JourneyDto> jresponses = new List<JourneyDto>();
+//        foreach (var itemJourney in ExitJourney)
+//        {
+//            JourneyDto journeyDB= new JourneyDto {Origin=itemJourney.Origin,Destination=itemJourney.Destination,Price=itemJourney.Price };
+//            var ExitJourneyFlight = await _unitOfWork.JourneyFlightRepository.Get()
+//                                                 .Where(x => x.JourneyId == itemJourney.Id)
+//                                                   .ToListAsync();
+//            journeyDB.Flights = new List<FlightDto>();
+//            foreach (var itemFlight in ExitJourneyFlight)
+//            {
 
-            return response;
+//                var Flight = await _unitOfWork.FlightRepository.Get()
+//                                                 .Where(x => x.Id == itemFlight.FlightId)
+//                                                   .ToListAsync();
+//                foreach (var item in Flight)
+//                {
+//                    var transport = _autoMapper.Map <TransportDto> (await _unitOfWork.TransportRepository.Get()
+//                                                 .Where(x => x.Id == item.TransportId)
+//                                                   .FirstOrDefaultAsync());
+//                    FlightDto flightDB = new FlightDto {Transport= transport,Origin=item.Origin,Destination=item.Destination,Price=item.Price };
+//                    journeyDB.Flights.Add(flightDB);
+
+//                }
+//            }
+//            jresponses.Add(journeyDB);
+//        }
+//        response.Data = jresponses;
+//    }
+//    else
+//    {
+//        var client = new HttpClient();
+//        var responseApi = await client.GetAsync("https://recruiting-api.newshore.es/api/flights/1");
+//        var content = await responseApi.Content.ReadAsStringAsync();
+//        var responseApiSerial = JsonConvert.DeserializeObject<List<FlightApiDto>>(content);
+//        //JourneyDto jresponse = new JourneyDto();
+//        List<FlightDto> jflight = new List<FlightDto>();
+//        foreach (var item in responseApiSerial)
+//        {
+//            jflight.Add(new FlightDto { Transport = new TransportDto { FligthCarrier = item.FlightCarrier, FligthCarrierNumber = item.FlightNumber }, Origin = item.DepartureStation, Destination = item.ArrivalStation, Price = item.Price });
+
+//        }
+//        List<JourneyDto> jresponses = new List<JourneyDto>();
+//        jresponses = FindAllPaths(jflight, request.Origin, request.Destination);
+
+//        foreach (var item in jresponses)
+//        {
+//            Domain.Models.Journey journeySave = new Domain.Models.Journey {Origin=item.Origin,Destination=item.Destination,Price=item.Price };
+//            var idjourney= await _unitOfWork.JourneyRepository.Add(journeySave);
+//            foreach (var itemFlight in item.Flights)
+//            {
+//                Fligth flightSave = new Fligth {Origin=itemFlight.Origin,Destination=itemFlight.Destination,Price=itemFlight.Price };
+//                Transport trasportSave = new Transport {FligthCarrier=itemFlight.Transport.FligthCarrier,FligthCarrierNumber=itemFlight.Transport.FligthCarrierNumber };
+//                var idtrasportSave = await _unitOfWork.TransportRepository.Add(trasportSave);
+//                flightSave.TransportId = idtrasportSave.Id;
+//                JourneyFlight journeyFlihgtSave = new JourneyFlight {JourneyId=idjourney.Id};
+//                var idFlight= await _unitOfWork.FlightRepository.Add(flightSave);
+//                journeyFlihgtSave.FlightId = idFlight.Id;
+//                await _unitOfWork.JourneyFlightRepository.Add(journeyFlihgtSave);
+//            }
+//        }
+//        response.Data = jresponses;
+//    }
+//    response.Result = true;
+//    response.Message = "OK";
+//}
+//catch (Exception ex)
+//{
+//    response.Result = false;
+//    response.Message = $"Error al consultar el registro, consulte con el administrador. { ex.Message } ";
+//}
+
+return response;
         }
         // Función para encontrar todas las rutas desde un origen a un destino
         public static List<JourneyDto> FindAllPaths(List<FlightDto> routes, string start, string target)
