@@ -7,15 +7,12 @@ using Application.Interfaces.Journey;
 using AutoMapper;
 using Domain.Interfaces;
 using Domain.Models;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Application.Services.Journey
@@ -71,7 +68,7 @@ namespace Application.Services.Journey
                 else
                 {
                     var client = new HttpClient();
-                    var responseApi = await client.GetAsync("https://recruiting-api.newshore.es/api/flights/1");
+                    var responseApi = await client.GetAsync("https://recruiting-api.newshore.es/api/flights/2");
                     var content = await responseApi.Content.ReadAsStringAsync();
                     var responseApiSerial = JsonConvert.DeserializeObject<List<FlightApiDto>>(content);
                     //JourneyDto jresponse = new JourneyDto();
