@@ -78,6 +78,11 @@ namespace Application.Services.Journey
                         jflight.Add(new FlightDto { Transport = new TransportDto { FligthCarrier = item.FlightCarrier, FligthCarrierNumber = item.FlightNumber }, Origin = item.DepartureStation, Destination = item.ArrivalStation, Price = item.Price });
 
                     }
+                    //}foreach (var item in responseApiSerial)
+                    //{
+                    //    jflight.Add(new FlightDto { Transport = new TransportDto { FligthCarrier = item.FlightCarrier, FligthCarrierNumber = item.FlightNumber }, Origin = item.DepartureStation, Destination = item.ArrivalStation, Price = item.Price });
+
+                    //}
                     List<JourneyDto> jresponses = new List<JourneyDto>();
                     jresponses = FindAllPaths(jflight, request.Origin, request.Destination);
 
